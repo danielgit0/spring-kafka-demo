@@ -133,8 +133,7 @@ openApiGenerate {
         mapOf(
             "interfaceOnly" to "true",
             "useTags" to "true",
-//            "useSpringBoot4" to "true",
-            "useSpringBoot3" to "true",
+            "useSpringBoot4" to "true",
             "useResponseEntity" to "true",
             "useJakartaEe" to "true",
         )
