@@ -1,0 +1,11 @@
+components:
+  parameters:
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: The id
+      schema:
+        type: string
+        format: uuid
+        minLength: 1

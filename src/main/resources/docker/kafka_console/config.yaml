@@ -1,0 +1,14 @@
+kafka:
+  brokers:
+    - kafka-0:29092
+    - kafka-1:29092
+    - kafka-2:29092
+schemaRegistry:
+  enabled: true
+  urls:
+    - http://kafka-0:8083
+redpanda:
+  adminApi:
+    enabled: true
+    urls:
+      - http://kafka-0:9644

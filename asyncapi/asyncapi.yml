@@ -1,0 +1,50 @@
+asyncapi: 3.0.0
+
+info:
+  title: Employee Kafka Demo Service
+  version: 1.0.0
+  description: Spring Boot Kafka producer/consumer demo using Avro schemas
+
+servers:
+  localKafka:
+    host: localhost:9092
+    protocol: kafka
+    description: Local Redpanda broker
+    bindings:
+      kafka:
+        schemaRegistryUrl: http://localhost:8083
+
+channels:
+  employeeCreated:
+    address: employee.local.kafka_demo.employee_created.v1
+    description: Employee created event topic
+    messages:
+      employeeMessage:
+        $ref: '#/components/messages/EmployeeMessage'
+
+operations:
+  publishEmployeeCreated:
+    action: send
+    channel:
+      $ref: '#/channels/employeeCreated'
+    summary: Publish EmployeeCreated event to Kafka
+    messages:
+      - $ref: '#/channels/employeeCreated/messages/employeeMessage'
+
+  consumeEmployeeCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/employeeCreated'
+    summary: Consume EmployeeCreated event from Kafka
+    messages:
+      - $ref: '#/channels/employeeCreated/messages/employeeMessage'
+
+components:
+  messages:
+    EmployeeMessage:
+      name: EmployeeMessage
+      title: Employee Created Event
+      contentType: application/avro
+      summary: Event emitted when an employee is created
+      payload:
+        $ref: '../src/main/avro/Employee.avsc'

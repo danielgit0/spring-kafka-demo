@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: kafka-demo
+  threads:
+    virtual:
+      enabled: true
+  docker:
+    compose:
+      enabled: false # disabled as I am using podman, should work in a docker setup
+      file: classpath:docker/compose.yml
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    properties:
+      schema.registry.url: http://localhost:8083
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        enable.idempotence: true
+        acks: all
+        retries: 3
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        group:
+          id: kafka-demo
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  otlp:
+    metrics:
+      export:
+        enabled: true
+#        endpoint: http://localhost:4318/v1/metrics
+        step: 10s
+    tracing:
+#      endpoint: http://localhost:4318/v1/traces
+      sampling:
+        probability: 1.0

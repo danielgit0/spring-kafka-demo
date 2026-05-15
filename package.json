@@ -1,0 +1,10 @@
+{
+  "name": "openapi-tools",
+  "private": true,
+  "devDependencies": {
+    "@redocly/cli": "^2.14.3"
+  },
+  "scripts": {
+    "redocly": "redocly"
+  }
+}

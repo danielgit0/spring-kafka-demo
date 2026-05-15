@@ -1,0 +1,12 @@
+components:
+  schemas:
+    EmployeeMessageRequest:
+      title: EmployeeMessageRequest
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        department:
+          type: string

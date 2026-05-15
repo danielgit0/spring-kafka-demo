@@ -1,0 +1,34 @@
+components:
+  schemas:
+    ErrorMessageMeta:
+      title: ErrorMessageMeta
+      type: object
+      properties:
+        requestUri:
+          type: string
+        queryString:
+          type: string
+        exception:
+          type: string
+    ErrorMessageEntry:
+      title: ErrorMessageEntry
+      type: object
+      properties:
+        status:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        cause:
+          type: string
+        meta:
+          $ref: "#/components/schemas/ErrorMessageMeta"
+    ErrorMessageBody:
+      title: ErrorMessageBody
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageEntry"

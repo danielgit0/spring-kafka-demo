@@ -1,0 +1,63 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'redpanda-lag'
+          scrape_interval: 10s
+          static_configs:
+            - targets:
+                - kafka-0:9644
+                - kafka-1:9644
+                - kafka-2:9644
+
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: '.*consumer.*|.*lag.*|.*offset.*'
+              action: keep
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1000
+
+  resource:
+    attributes:
+      - key: cluster.name
+        value: redpanda-dev
+        action: upsert
+
+exporters:
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+
+  prometheus:
+    endpoint: 0.0.0.0:8889
+
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/tempo]
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch, resource]
+      exporters: [prometheus]
+
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki]

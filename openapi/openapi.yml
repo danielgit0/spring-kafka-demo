@@ -1,0 +1,48 @@
+openapi: 3.1.0
+info:
+  title: Employee Kafka Demo Service
+  version: 1.0.0-SNAPSHOT
+  description: Backend service for a Kafka demo
+  license:
+    name: Private
+    identifier: "identifier"
+servers:
+  - url: '{kafka-demo-backend}'
+    variables:
+      kafka-demo-backend:
+        enum:
+          - http://localhost:8080
+        default: http://localhost:8080
+security: []
+paths:
+  /api/v1/message/employee:
+    post:
+      tags:
+        - Employee
+      summary: Send an employee message
+      description: Send an employee message
+      operationId: sendEmployeeMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './requests/employee-message.yml#/components/schemas/EmployeeMessageRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: './responses/employee-message.yml#/components/schemas/EmployeeMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './responses/errors.yml#/components/schemas/ErrorMessageBody'
+        default:
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: './responses/errors.yml#/components/schemas/ErrorMessageBody'

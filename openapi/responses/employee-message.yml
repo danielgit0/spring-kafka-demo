@@ -1,0 +1,8 @@
+components:
+  schemas:
+    EmployeeMessageResponse:
+      title: EmployeeMessageResponse
+      type: object
+      properties:
+        message:
+          type: string

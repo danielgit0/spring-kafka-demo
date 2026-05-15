@@ -1,0 +1,206 @@
+services:
+  kafka-0:
+    image: docker.redpanda.com/redpandadata/redpanda:v25.1.5-arm64
+    container_name: kafka-0
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr=PLAINTEXT://kafka-0:29092,OUTSIDE://localhost:9092
+      - --rpc-addr=kafka-0:33145
+      - --advertise-rpc-addr=kafka-0:33145
+      - --seeds=kafka-0:33145,kafka-1:33145,kafka-2:33145
+      - --pandaproxy-addr=PLAINTEXT://0.0.0.0:8082
+      - --advertise-pandaproxy-addr=PLAINTEXT://kafka-0:8082
+      - --schema-registry-addr=PLAINTEXT://0.0.0.0:8083
+      - --mode=dev-container
+    ports:
+      - "9092:9092"
+      - "8082:8082"
+      - "8083:8083"
+      - "9644:9644"
+    volumes:
+      - kafka0-data:/var/lib/redpanda/data
+    networks:
+      - observability
+
+  kafka-1:
+    image: docker.redpanda.com/redpandadata/redpanda:v25.1.5-arm64
+    container_name: kafka-1
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --node-id=1
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9093
+      - --advertise-kafka-addr=PLAINTEXT://kafka-1:29092,OUTSIDE://localhost:9093
+      - --rpc-addr=kafka-1:33145
+      - --advertise-rpc-addr=kafka-1:33145
+      - --seeds=kafka-0:33145,kafka-1:33145,kafka-2:33145
+      - --mode=dev-container
+    ports:
+      - "9093:9093"
+    volumes:
+      - kafka1-data:/var/lib/redpanda/data
+    networks:
+      - observability
+
+  kafka-2:
+    image: docker.redpanda.com/redpandadata/redpanda:v25.1.5-arm64
+    container_name: kafka-2
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --node-id=2
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9094
+      - --advertise-kafka-addr=PLAINTEXT://kafka-2:29092,OUTSIDE://localhost:9094
+      - --rpc-addr=kafka-2:33145
+      - --advertise-rpc-addr=kafka-2:33145
+      - --seeds=kafka-0:33145,kafka-1:33145,kafka-2:33145
+      - --mode=dev-container
+    ports:
+      - "9094:9094"
+    volumes:
+      - kafka2-data:/var/lib/redpanda/data
+    networks:
+      - observability
+
+  kafka-console:
+    image: redpandadata/console:v3.0.0
+    container_name: kafka-console
+    environment:
+      CONFIG_FILEPATH: /etc/console/config.yml
+    volumes:
+      - ./kafka_console/config.yaml:/etc/console/config.yml
+    ports:
+      - "8081:8080"
+    depends_on:
+      - kafka-0
+      - kafka-1
+      - kafka-2
+    networks:
+      - observability
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.127.0-arm64
+    container_name: otel-collector
+    command: [ "--config=/etc/config.yaml" ]
+    volumes:
+      - ./otel/config.yaml:/etc/config.yaml:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8889:8889"
+    depends_on:
+      - kafka-0
+      - kafka-1
+      - kafka-2
+    networks:
+      - observability
+
+  tempo:
+    image: grafana/tempo:2.8.1
+    container_name: tempo
+    command: [ "-config.file=/etc/config.yaml" ]
+    volumes:
+      - ./tempo/config.yaml:/etc/config.yaml:ro
+    ports:
+      - "3200:3200"
+    networks:
+      - observability
+
+  loki:
+    image: grafana/loki:3.7.2
+    container_name: loki
+    command:
+      - "-config.file=/etc/loki/loki.yaml"
+    volumes:
+      - ./loki/loki.yaml:/etc/loki/loki.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - observability
+
+  pyroscope:
+    image: grafana/pyroscope:2.0.2
+    container_name: pyroscope
+    command:
+      - server
+      - /etc/pyroscope/server.yaml
+    volumes:
+      - ./pyroscope/server.yaml:/etc/pyroscope/server.yaml
+    ports:
+      - "4040:4040"
+    networks:
+      - observability
+
+  prometheus:
+    image: prom/prometheus:v3.11.3
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+      - "--storage.tsdb.path=/prometheus"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - observability
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    container_name: grafana
+    volumes:
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+      - ./grafana/dashboard-providers.yaml:/etc/grafana/provisioning/dashboards/dashboard-providers.yaml:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - tempo
+      - prometheus
+      - loki
+      - pyroscope
+    networks:
+      - observability
+  kafka-schema-bootstrap:
+    image: python:3.12.8-slim  # Pin to exact version
+    command: >
+      bash -c "
+      pip install --no-cache-dir requests &&
+      python /register_schemas.py
+      "
+    volumes:
+      - ../../../main/avro/:/schemas:ro
+      - ./kafka_schema_bootstrap/register_schemas.py:/register_schemas.py:ro
+    networks:
+      - observability
+
+networks:
+  observability:
+    driver: bridge
+
+volumes:
+  kafka0-data:
+  kafka1-data:
+  kafka2-data:
+  prometheus-data:
+  grafana-storage:
