@@ -38,3 +38,10 @@ repos:
         args: [ "build", "--dry-run" ]
         language: system
         pass_filenames: false
+#       - id: dependency-check
+#         name: OWASP Dependency Scan
+#         entry: ./gradlew
+#         args: [ "dependencyCheckAnalyze" ]
+#         language: system
+#         stages: [push]
+#         pass_filenames: false

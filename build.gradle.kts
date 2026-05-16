@@ -10,6 +10,7 @@ plugins {
     id("pmd")
     id("org.openapi.generator") version "7.14.0"
     id("com.github.node-gradle.node") version "7.1.0"
+//    id("org.owasp.dependencycheck") version "12.1.0"
 }
 
 group = "com.example"
@@ -99,6 +100,19 @@ checkstyle {
 pmd {
     toolVersion = "6.55.0"
 }
+
+/*dependencyCheck {
+    failBuildOnCVSS = 7.0f
+
+    // suppressionFile = "dependency-check-suppressions.xml"
+
+    analyzers.apply {
+        nodeEnabled = true   // scan package.json / npm deps
+        assemblyEnabled = false
+    }
+
+    formats = listOf("HTML", "JSON")
+}*/
 
 val avroOutputDir = layout.buildDirectory
     .dir("generated-sources/avro")
