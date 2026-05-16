@@ -10,12 +10,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-class Consumer {
+public class EmployeeConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(Consumer.class);
+  private static final Logger log = LoggerFactory.getLogger(EmployeeConsumer.class);
 
   @KafkaListener(topics = {EMPLOYEE_CREATED_V1})
-  public void consume(ConsumerRecord<Integer, Employee> record) {
-    log.info("received = [{}] with key [{}]", record.value(), record.key());
+  public void consume(ConsumerRecord<String, Employee> record) {
+    log.debug("received = [{}] with key [{}]", record.value(), record.key());
   }
 }

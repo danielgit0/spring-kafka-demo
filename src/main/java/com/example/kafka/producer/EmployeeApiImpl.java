@@ -53,9 +53,9 @@ public class EmployeeApiImpl implements EmployeeApi {
     CompletableFuture<SendResult<String, Employee>> result = kafkaTemplate.send(employeeRecord);
 
     String successMessage =
-        "published to topic [%s]: [%s]\nresult: [%s]"
-            .formatted(EMPLOYEE_CREATED_V1, employee, result.toString());
-    log.info(successMessage);
+        "published message [%s] to topic [%s]. result: [%s]"
+            .formatted(employee, EMPLOYEE_CREATED_V1, result.toString());
+    log.debug(successMessage);
 
     EmployeeMessageResponse response = new EmployeeMessageResponse();
     response.setMessage(successMessage);
