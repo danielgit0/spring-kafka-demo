@@ -16,6 +16,8 @@ The main Kafka sources are
 * `Kafka The Definitive Guide Real-Time Data and Stream Processing at Scale Second Edition by Gwen Shapira Todd Palino Rajini Sivaram Krit Petty`.
 * [Spring for Apache Kafka - 4.0.5](https://docs.spring.io/spring-kafka/reference/index.html)
 
+There was also usage of AI mainly to generate this `README.md` file and help with the observability configuration and general questions. It was a combination of Antigravity, ChatGPT and DeepSeek.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -175,7 +177,50 @@ The application will publish the event to Kafka and the consumer will log it.
 
 ---
 
+## Redpanda CLI (rpk) Commands
+
+Since the broker is running in Podman, you can use the `podman exec` command to run Redpanda's built-in `rpk` (Redpanda Keeper) CLI directly inside the `kafka-0` container.
+
+### Cluster & Topics
+
+**View cluster info:**
+```bash
+podman exec -it kafka-0 rpk cluster info
+```
+
+**List all topics:**
+```bash
+podman exec -it kafka-0 rpk topic list
+```
+
+**Create a topic:**
+```bash
+podman exec -it kafka-0 rpk topic create my-new-topic -p 3
+```
+
+**Delete a topic:**
+```bash
+podman exec -it kafka-0 rpk topic delete my-new-topic
+```
+
+### Produce & Consume Messages
+
+**Produce a message to a topic:**
+```bash
+podman exec -it kafka-0 rpk topic produce employee.local.kafka_demo.employee_created.v1
+```
+*(Type your message payload and press Enter. Press `Ctrl+C` to exit.)*
+
+**Consume messages from a topic:**
+```bash
+podman exec -it kafka-0 rpk topic consume employee.local.kafka_demo.employee_created.v1 --use-schema-registry=value -X registry.hosts=http://localhost:8083
+```
+*(Note: The `--use-schema-registry=value` flag combined with `-X registry.hosts=http://localhost:8083` tells `rpk` to connect to the custom embedded schema registry port and automatically deserialize the Avro payload into JSON format in your terminal.)*
+
+---
+
 ## Observability
+
 
 | Tool | URL | Purpose |
 |---|---|---|
