@@ -6,13 +6,11 @@ import com.example.generated.api.EmployeeApi;
 import com.example.generated.kafka.Employee;
 import com.example.generated.model.EmployeeMessageRequest;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -23,9 +21,11 @@ public class EmployeeApiImpl implements EmployeeApi {
   private static final Logger log = LoggerFactory.getLogger(EmployeeApiImpl.class);
 
   private final KafkaTemplate<String, Employee> kafkaTemplate;
+  private final ProducerCallback callback;
 
-  public EmployeeApiImpl(KafkaTemplate<String, Employee> kafkaTemplate) {
+  public EmployeeApiImpl(KafkaTemplate<String, Employee> kafkaTemplate, ProducerCallback callback) {
     this.kafkaTemplate = kafkaTemplate;
+    this.callback = callback;
   }
 
   @Override
@@ -48,13 +48,15 @@ public class EmployeeApiImpl implements EmployeeApi {
 
     employeeRecord.headers().add("myTestHeader", "test".getBytes());
 
-    CompletableFuture<SendResult<String, Employee>> result = kafkaTemplate.send(employeeRecord);
+    try {
+      kafkaTemplate.send(employeeRecord).whenComplete(callback::onCompletion);
 
-    String successMessage =
-        "published message [%s] to topic [%s]. result: [%s]"
-            .formatted(employee, EMPLOYEE_CREATED_V1, result.toString());
-    log.debug(successMessage);
+      log.debug("publishing record={} to topic={}", employee, EMPLOYEE_CREATED_V1);
 
-    return ResponseEntity.ok().build();
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      log.error("Kafka send failed", e);
+      return ResponseEntity.internalServerError().build();
+    }
   }
 }
