@@ -10,6 +10,9 @@ spring:
       file: classpath:docker/compose.yml
   kafka:
     bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    admin:
+      auto-create: true
+      modify-topic-configs: true
     properties:
       schema.registry.url: http://localhost:8083
     producer:
