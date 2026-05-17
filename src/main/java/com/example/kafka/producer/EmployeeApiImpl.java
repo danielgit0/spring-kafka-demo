@@ -48,15 +48,11 @@ public class EmployeeApiImpl implements EmployeeApi {
 
     employeeRecord.headers().add("myTestHeader", "test".getBytes());
 
-    try {
-      kafkaTemplate.send(employeeRecord).whenComplete(callback::onCompletion);
+    log.debug("publishing record={} to topic={}", employee, EMPLOYEE_CREATED_V1);
+    kafkaTemplate
+        .send(employeeRecord)
+        .whenComplete((result, ex) -> callback.onCompletion(result, ex, employeeRecord));
 
-      log.debug("publishing record={} to topic={}", employee, EMPLOYEE_CREATED_V1);
-
-      return ResponseEntity.ok().build();
-    } catch (Exception e) {
-      log.error("Kafka send failed", e);
-      return ResponseEntity.internalServerError().build();
-    }
+    return ResponseEntity.ok().build();
   }
 }

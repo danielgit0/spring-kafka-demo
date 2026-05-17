@@ -1,5 +1,6 @@
 package com.example.kafka.producer;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,14 @@ public class ProducerCallback {
 
   private static final Logger log = LoggerFactory.getLogger(ProducerCallback.class);
 
-  public <K, V> void onCompletion(SendResult<K, V> result, Throwable e) {
+  private final DeadLetterQueueService deadLetterQueueService;
+
+  public ProducerCallback(DeadLetterQueueService deadLetterQueueService) {
+    this.deadLetterQueueService = deadLetterQueueService;
+  }
+
+  public <K, V> void onCompletion(
+      SendResult<K, V> result, Throwable e, ProducerRecord<K, V> record) {
     if (e == null && result != null) {
       RecordMetadata metadata = result.getRecordMetadata();
 
@@ -34,7 +42,8 @@ public class ProducerCallback {
           metadata.serializedKeySize(),
           metadata.serializedValueSize());
     } else {
-      log.error("failed to send record", e);
+      log.error("failed to publish record={}", record, e);
+      deadLetterQueueService.sendToDlq(record);
     }
   }
 }
