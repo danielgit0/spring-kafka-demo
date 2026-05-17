@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Employee Kafka Demo Service
+  title: Kafka Demo Service
   version: 1.0.0-SNAPSHOT
   description: Backend service for a Kafka demo
   license:
@@ -18,7 +18,7 @@ paths:
   /api/v1/message/employee:
     post:
       tags:
-        - Employee
+        - Message
       summary: Send an employee message
       description: Send an employee message
       operationId: sendEmployeeMessage
