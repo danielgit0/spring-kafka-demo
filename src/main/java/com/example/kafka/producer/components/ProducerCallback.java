@@ -1,5 +1,6 @@
-package com.example.kafka.producer;
+package com.example.kafka.producer.components;
 
+import com.example.kafka.producer.services.dlq.DeadLetterQueueService;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
