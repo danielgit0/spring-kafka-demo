@@ -12,7 +12,9 @@ HTTP Client → REST API (OpenAPI-generated) → Kafka Producer → [employee to
 
 ## Reference
 
-The main Kafka source is the book: `Kafka The Definitive Guide Real-Time Data and Stream Processing at Scale Second Edition by Gwen Shapira Todd Palino Rajini Sivaram Krit Petty`.
+The main Kafka sources are
+* `Kafka The Definitive Guide Real-Time Data and Stream Processing at Scale Second Edition by Gwen Shapira Todd Palino Rajini Sivaram Krit Petty`.
+* [Spring for Apache Kafka - 4.0.5](https://docs.spring.io/spring-kafka/reference/index.html)
 
 ## Tech Stack
 
