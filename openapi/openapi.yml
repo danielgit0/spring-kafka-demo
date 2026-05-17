@@ -28,12 +28,8 @@ paths:
             schema:
               $ref: './requests/employee-message.yml#/components/schemas/EmployeeMessageRequest'
       responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: './responses/employee-message.yml#/components/schemas/EmployeeMessageResponse'
+        '200':
+          description: Ok
         '400':
           description: Bad Request
           content:

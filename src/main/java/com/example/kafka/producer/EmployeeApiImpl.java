@@ -5,7 +5,6 @@ import static com.example.kafka.common.Topics.EMPLOYEE_CREATED_V1;
 import com.example.generated.api.EmployeeApi;
 import com.example.generated.kafka.Employee;
 import com.example.generated.model.EmployeeMessageRequest;
-import com.example.generated.model.EmployeeMessageResponse;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -35,8 +34,7 @@ public class EmployeeApiImpl implements EmployeeApi {
   }
 
   @Override
-  public ResponseEntity<EmployeeMessageResponse> sendEmployeeMessage(
-      @RequestBody EmployeeMessageRequest request) {
+  public ResponseEntity<Void> sendEmployeeMessage(@RequestBody EmployeeMessageRequest request) {
 
     Employee employee =
         Employee.newBuilder()
@@ -57,9 +55,6 @@ public class EmployeeApiImpl implements EmployeeApi {
             .formatted(employee, EMPLOYEE_CREATED_V1, result.toString());
     log.debug(successMessage);
 
-    EmployeeMessageResponse response = new EmployeeMessageResponse();
-    response.setMessage(successMessage);
-
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok().build();
   }
 }
