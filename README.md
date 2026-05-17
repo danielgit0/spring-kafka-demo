@@ -10,6 +10,10 @@ The application exposes a REST endpoint (`POST /api/v1/message/employee`) that p
 HTTP Client → REST API (OpenAPI-generated) → Kafka Producer → [employee topic] → Kafka Consumer
 ```
 
+## Reference
+
+The main Kafka source is the book: `Kafka The Definitive Guide Real-Time Data and Stream Processing at Scale Second Edition by Gwen Shapira Todd Palino Rajini Sivaram Krit Petty`.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -120,7 +124,6 @@ It describes:
 - **Message payload:** `Employee` Avro record (`src/main/avro/Employee.avsc`)
 
 ```json
-// Employee.avsc
 {
   "type": "record",
   "name": "Employee",
