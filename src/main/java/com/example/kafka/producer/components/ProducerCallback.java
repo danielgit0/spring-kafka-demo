@@ -1,6 +1,5 @@
 package com.example.kafka.producer.components;
 
-import com.example.kafka.producer.services.dlq.DeadLetterQueueService;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -13,12 +12,6 @@ public class ProducerCallback {
 
   private static final Logger log = LoggerFactory.getLogger(ProducerCallback.class);
 
-  private final DeadLetterQueueService deadLetterQueueService;
-
-  public ProducerCallback(DeadLetterQueueService deadLetterQueueService) {
-    this.deadLetterQueueService = deadLetterQueueService;
-  }
-
   public <K, V> void onCompletion(
       SendResult<K, V> result, Throwable e, ProducerRecord<K, V> record) {
     if (e == null && result != null) {
@@ -26,14 +19,14 @@ public class ProducerCallback {
 
       log.debug(
           """
-          Kafka message sent successfully:
-          topic={}
-          partition={}
-          hasOffset={}; offset={}
-          hasTimestamp={}; timestamp={}
-          keySize={}
-          valueSize={}
-          """,
+              Kafka message sent successfully:
+              topic={}
+              partition={}
+              hasOffset={}; offset={}
+              hasTimestamp={}; timestamp={}
+              keySize={}
+              valueSize={}
+              """,
           metadata.topic(),
           metadata.partition(),
           metadata.hasOffset(),
@@ -44,7 +37,6 @@ public class ProducerCallback {
           metadata.serializedValueSize());
     } else {
       log.error("failed to publish record={}", record, e);
-      deadLetterQueueService.sendToDlq(record);
     }
   }
 }
