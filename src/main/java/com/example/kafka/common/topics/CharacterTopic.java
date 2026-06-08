@@ -10,6 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class CharacterTopic {
 
+  public static final String CHARACTER_GROUP_ID_V1 = "demo.character.v1";
   public static final String CHARACTER_CREATED_V1 =
       "character.local.kafka_demo.character_created.v1";
 

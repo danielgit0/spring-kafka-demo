@@ -26,8 +26,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
       properties:
-        group:
-          id: kafka-demo
+#        group:
+#          id: kafka-demo
         partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
         specific.avro.reader: true
 

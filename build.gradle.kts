@@ -60,7 +60,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation(platform(SpringBootPlugin.BOM_COORDINATES))
     implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:$instrumentationBomVersion"))
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+//    developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     testImplementation("org.springframework.boot:spring-boot-starter-kafka-test")

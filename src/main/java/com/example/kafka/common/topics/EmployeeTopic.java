@@ -10,6 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class EmployeeTopic {
 
+  public static final String EMPLOYER_GROUP_ID_V1 = "demo.employee.v1";
   public static final String EMPLOYEE_CREATED_V1 = "employee.local.kafka_demo.employee_created.v1";
 
   @Bean
