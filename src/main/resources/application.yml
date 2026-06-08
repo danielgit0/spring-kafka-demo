@@ -29,6 +29,7 @@ spring:
         group:
           id: kafka-demo
         partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
+        specific.avro.reader: true
 
 management:
   endpoints:
