@@ -42,3 +42,30 @@ paths:
             application/json:
               schema:
                 $ref: './responses/errors.yml#/components/schemas/ErrorMessageBody'
+  /api/v1/message/character:
+    post:
+      tags:
+        - Message
+      summary: Send an film/series character message
+      description: Send an film/series character message
+      operationId: sendCharacterMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './requests/character-message.yml#/components/schemas/CharacterMessageRequest'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './responses/errors.yml#/components/schemas/ErrorMessageBody'
+        default:
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: './responses/errors.yml#/components/schemas/ErrorMessageBody'

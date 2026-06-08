@@ -1,0 +1,15 @@
+components:
+  schemas:
+    CharacterMessageRequest:
+      title: CharacterMessageRequest
+      type: object
+      properties:
+        id:
+          type: string
+          example: "46329181-f7f8-4639-b203-7c1a9d3a110b"
+        name:
+          type: string
+          example: "Fulanita"
+        role:
+          type: string
+          example: "BAD_GUY"

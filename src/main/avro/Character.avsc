@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Character",
+  "namespace": "com.example.generated.kafka",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "name", "type": "string" },
+    { "name": "role", "type": "string" }
+  ]
+}
