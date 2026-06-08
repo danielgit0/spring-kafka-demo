@@ -1,6 +1,6 @@
 package com.example.kafka.producer.services.employee;
 
-import static com.example.kafka.common.Topics.EMPLOYEE_CREATED_V1;
+import static com.example.kafka.common.topics.EmployeeTopic.EMPLOYEE_CREATED_V1;
 
 import com.example.generated.kafka.Employee;
 import com.example.generated.model.EmployeeMessageRequest;

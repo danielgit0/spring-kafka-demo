@@ -1,4 +1,4 @@
-package com.example.kafka.common;
+package com.example.kafka.common.topics;
 
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class Topics {
+public class EmployeeTopic {
 
   public static final String EMPLOYEE_CREATED_V1 = "employee.local.kafka_demo.employee_created.v1";
 
