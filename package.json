@@ -1,6 +1,7 @@
 {
   "name": "openapi-tools",
   "private": true,
+  "packageManager": "pnpm",
   "devDependencies": {
     "@redocly/cli": "^2.14.3"
   },

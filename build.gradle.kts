@@ -156,19 +156,19 @@ openApiGenerate {
 
 node {
     version.set("24.12.0")
-    //npmVersion.set("10.5.0")
+    pnpmVersion.set("11.9.0")
     download.set(true)
 }
 val openApiInput = "${projectDir}/openapi/openapi.yml"
 val openApiBundled = "${layout.buildDirectory.asFile.get()}/generated-openapi-bundle/openapi.yml"
-tasks.npmInstall {
+tasks.pnpmInstall {
     inputs.file("${projectDir}/package.json")
 }
 tasks.register<com.github.gradle.node.npm.task.NpmTask>("redoclyLint") {
     group = "openapi tools"
     description = "Lint OpenAPI spec with Redocly"
 
-    dependsOn(tasks.npmInstall)
+    dependsOn(tasks.pnpmInstall)
 
     args.set(
         listOf(
@@ -185,7 +185,7 @@ tasks.register<com.github.gradle.node.npm.task.NpmTask>("redoclyBundle") {
     group = "openapi tools"
     description = "Bundle OpenAPI spec with Redocly"
 
-    dependsOn(tasks.npmInstall, "redoclyLint")
+    dependsOn(tasks.pnpmInstall, "redoclyLint")
 
     args.set(
         listOf(
