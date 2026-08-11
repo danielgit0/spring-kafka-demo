@@ -16,7 +16,7 @@ public class EmployeeTopic {
   @Bean
   public NewTopic employeeCreateV1() {
     return TopicBuilder.name(EMPLOYEE_CREATED_V1)
-        .partitions(3)
+        .partitions(1)
         .replicas(3)
         .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(TimeUnit.DAYS.toMillis(7)))
         .build();
