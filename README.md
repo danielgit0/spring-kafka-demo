@@ -203,6 +203,11 @@ podman exec -it kafka-0 rpk topic create my-new-topic -p 3
 podman exec -it kafka-0 rpk topic delete my-new-topic
 ```
 
+**Analyze a topic**
+```shell
+podman exec -it kafka-0 rpk topic analyze character.local.kafka_demo.character_created.v1
+```
+
 ### Produce & Consume Messages
 
 **Produce a message to a topic:**
