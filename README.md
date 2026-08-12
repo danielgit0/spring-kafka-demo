@@ -208,6 +208,11 @@ podman exec -it kafka-0 rpk topic delete my-new-topic
 podman exec -it kafka-0 rpk topic analyze character.local.kafka_demo.character_created.v1
 ```
 
+**Describe a topic**
+```shell
+podman exec -it kafka-0 rpk topic describe kafka-playground-app-book-description.local.kafka_demo.book-description.v1-store-changelog
+```
+
 ### Produce & Consume Messages
 
 **Produce a message to a topic:**
@@ -215,6 +220,15 @@ podman exec -it kafka-0 rpk topic analyze character.local.kafka_demo.character_c
 podman exec -it kafka-0 rpk topic produce employee.local.kafka_demo.employee_created.v1
 ```
 *(Type your message payload and press Enter. Press `Ctrl+C` to exit.)*
+
+**Produce a message option with key using schema**
+```shell
+echo '{"isbn": "978-3-16-148410-0", "description": "A wonderful book about streaming data."}' \
+| podman exec -i kafka-0 rpk topic produce book-description.local.kafka_demo.book-description.v1 \
+  -X registry.hosts=localhost:8083 \
+  --schema-id 3 \
+  -k "978-3-16-148410-0"
+```
 
 **Consume messages from a topic:**
 ```bash

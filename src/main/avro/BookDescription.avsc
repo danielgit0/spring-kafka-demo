@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "name": "BookDescription",
+  "namespace": "com.example.generated.kafka",
+  "fields": [
+    { "name": "isbn", "type": "string" },
+    { "name": "description", "type": "string" }
+  ]
+}

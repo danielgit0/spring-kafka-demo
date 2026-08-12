@@ -22,8 +22,9 @@ java {
     }
 }
 
-val avroConfluentSerializerVersion = "7.6.1"
+val avroConfluentSerializerVersion = "7.7.1"
 val avroVersion = "1.11.3"
+val avroSerdeVersion = "7.7.1"
 val instrumentationBomVersion = "2.27.0"
 val jakartaAnnotationApiVersion = "2.1.1"
 val jacksonDataBindNullableVersion = "0.2.6"
@@ -51,7 +52,9 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion")
     implementation("org.apache.avro:avro:${avroVersion}")
     implementation("org.openapitools:jackson-databind-nullable:$jacksonDataBindNullableVersion")
+    implementation("io.confluent:kafka-streams-avro-serde:$avroSerdeVersion")
     implementation("io.swagger.core.v3:swagger-annotations:$swaggerAnnotationsVersion") // pin for openapi-generator requiredMode compat
+    implementation("org.apache.kafka:kafka-streams")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") // (required by generated code)
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-kafka")

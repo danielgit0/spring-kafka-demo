@@ -78,7 +78,7 @@ services:
       - observability
 
   kafka-console:
-    image: redpandadata/console:v3.0.0
+    image: redpandadata/console:v3.10.0
     container_name: kafka-console
     environment:
       CONFIG_FILEPATH: /etc/console/config.yml

@@ -15,6 +15,8 @@ spring:
       modify-topic-configs: true
     properties:
       schema.registry.url: http://localhost:8083
+      value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+      key.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
@@ -22,6 +24,7 @@ spring:
         enable.idempotence: true
         acks: all
         retries: 3
+        replication.factor: 3
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
@@ -30,6 +33,15 @@ spring:
 #          id: kafka-demo
         partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
         specific.avro.reader: true
+        value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+    streams:
+      application-id: kafka-playground-app
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      properties:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        # Maps the Streams internal client to Redpanda's Schema Registry
+        schema.registry.url: http://localhost:8083
 
 management:
   endpoints:
